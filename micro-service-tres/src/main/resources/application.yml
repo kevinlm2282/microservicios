@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: ms-service-entrega
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/empresa
+    username: root
+    password: root123
+  jpa:
+    database-platform:
+      org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+server:
+  port: 7200
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7000/eureka/
+  instance:
+    hostname: localhost
+
+keycloak:
+  realm: empresa
+  auth-server-url: http://localhost:8100
+  resource: client
+  credentials:
+    secret: Lyr2zr2q36hcwPHMPw9Z5WAXIRmlL7yN
+  autodetect-bearer-only: true
+  security-constraints:
+    - auth-roles:
+        - ADMIN
+        - USER
+      securityCollections:
+      - name: ENDPOINTS para todos
+        patterns: /v1/api/entrega/*
+        omitted-methods:
+          - OPTIONS
+    - auth-roles:
+        - ADMIN
+        - USER
+      securityCollections:
+      - name: ENDPOINTS para admin
+        patterns: /v1/api/entrega
+        omitted-methods:
+          - OPTIONS
+  ssl-required: external
+  use-resource-role-mappings: false

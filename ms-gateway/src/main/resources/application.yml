@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        - id: ms-service-mueble
+          uri: lb://ms-service-mueble
+          predicates:
+            - Path=/ms-service-mueble/**
+          filters:
+            - RewritePath=/ms-service-mueble/(?<remaining>.*), /$\{remaining}
+        - id: ms-service-entrega
+          uri: lb://ms-service-entrega
+          predicates:
+            - Path=/ms-service-entrega/**
+          filters:
+            - RewritePath=/ms-service-entrega/(?<remaining>.*), /$\{remaining}
+        - id: ms-service-usuario
+          uri: lb://ms-service-usuario
+          predicates:
+            - Path=/ms-service-usuario/**
+          filters:
+            - RewritePath=/ms-service-usuario/(?<remaining>.*), /$\{remaining}
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:7000/eureka/
+    enabled: true
+  instance:
+    hostname: localhost
